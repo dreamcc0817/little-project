@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "rocketmq.namesrv.address",
+      "type": "java.lang.String",
+      "description": "Description for rocketmq.namesrv.address."
+    }
+  ]
+}
