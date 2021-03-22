@@ -6,8 +6,8 @@
 
     <groupId>com.dreamcc</groupId>
     <artifactId>little-project</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>little-project</name>
+    <version>rocketmq</version>
+    <name>little-project-rocketmq</name>
     <description>RocketMQ Project</description>
 
     <properties>
@@ -141,7 +141,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.1.2.RELEASE</version>
                 <configuration>
-                    <mainClass>com.ruyuan.little.project.rocketmq.LittleProjectRocketMqApplication</mainClass>
+                    <mainClass>com.dreamcc.little.project.LittleProjectApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
