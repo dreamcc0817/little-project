@@ -7,4 +7,9 @@ public class RedisKeyConstant {
      */
     public static final String FIRST_LOGIN_DUPLICATION_KEY_PREFIX = "little:project:firstLoginDuplication:";
 
+    /**
+     * 酒店房间key的前缀
+     */
+    public static final String HOTEL_ROOM_KEY_PREFIX = "little:project:hotelRoom:";
+
 }
