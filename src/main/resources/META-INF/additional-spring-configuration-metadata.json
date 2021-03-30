@@ -4,6 +4,16 @@
       "name": "rocketmq.namesrv.address",
       "type": "java.lang.String",
       "description": "Description for rocketmq.namesrv.address."
+    },
+    {
+      "name": "rocketmq.login.consumer.group",
+      "type": "java.lang.String",
+      "description": "Description for rocketmq.login.consumer.group."
+    },
+    {
+      "name": "rocketmq.login.topic",
+      "type": "java.lang.String",
+      "description": "Description for rocketmq.login.topic."
     }
   ]
 }
