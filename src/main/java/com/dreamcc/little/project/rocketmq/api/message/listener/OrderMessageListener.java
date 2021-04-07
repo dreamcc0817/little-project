@@ -8,9 +8,7 @@ import com.ruyuan.little.project.common.dto.CommonResponse;
 import com.ruyuan.little.project.common.enums.LittleProjectTypeEnum;
 import com.ruyuan.little.project.common.enums.MessageTypeEnum;
 import com.ruyuan.little.project.message.api.WxSubscribeMessageApi;
-import com.ruyuan.little.project.message.dto.ValueDTO;
-import com.ruyuan.little.project.message.dto.WaitPayOrderMessageDTO;
-import com.ruyuan.little.project.message.dto.WxSubscribeMessageDTO;
+import com.ruyuan.little.project.message.dto.*;
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
@@ -63,6 +61,15 @@ public class OrderMessageListener implements MessageListenerOrderly {
                 if (Objects.equals(messageType, MessageTypeEnum.WX_CREATE_ORDER)) {
                     WaitPayOrderMessageDTO waitPayOrderMessageDTO = this.builderWaitPayOrderMessage(orderInfo);
                     this.send(waitPayOrderMessageDTO, orderInfo.getPhoneNumber(), messageType);
+                } else if (Objects.equals(messageType, MessageTypeEnum.WX_CANCEL_ORDER)) {
+                    CancelOrderMessageDTO cancelOrderMessageDTO = this.builderCancelOrderMessage(orderInfo);
+                    this.send(cancelOrderMessageDTO, orderInfo.getPhoneNumber(), messageType);
+                } else if (Objects.equals(messageType, MessageTypeEnum.WX_PAY_ORDER)) {
+                    PayOrderMessageDTO payOrderMessageDTO = this.builderPayOrderMessage(orderInfo);
+                    this.send(payOrderMessageDTO, orderInfo.getPhoneNumber(), messageType);
+                } else if (Objects.equals(messageType, MessageTypeEnum.WX_CONFIRM_ORDER)) {
+                    ConfirmOrderMessageDTO confirmOrderMessageDTO = this.builderConfirmOrderMessage(orderInfo);
+                    this.send(confirmOrderMessageDTO, orderInfo.getPhoneNumber(), messageType);
                 }
             } catch (Exception e) {
                 LOGGER.error("push wx message fail error message:{}", e.getMessage());
@@ -102,6 +109,80 @@ public class OrderMessageListener implements MessageListenerOrderly {
         thing3.setValue(orderInfo.getOrderItem().getTitle());
         waitPayOrderMessageDTO.setThing3(thing3);
         return waitPayOrderMessageDTO;
+    }
+
+    /**
+     * 构建取消订单的消息内容
+     *
+     * @param orderInfo 订单信息
+     * @return 结果
+     */
+    private CancelOrderMessageDTO builderCancelOrderMessage(OrderInfo orderInfo) {
+        CancelOrderMessageDTO cancelOrderMessageDTO = new CancelOrderMessageDTO();
+        ValueDTO thing1 = new ValueDTO();
+        thing1.setValue(orderInfo.getOrderItem().getTitle());
+        cancelOrderMessageDTO.setThing1(thing1);
+
+        ValueDTO time2 = new ValueDTO();
+        long createTime = orderInfo.getCancelTime() * 1000L;
+        time2.setValue(DateUtil.format(new Date(createTime), DateUtil.FULL_TIME_SPLIT_PATTERN));
+        cancelOrderMessageDTO.setTime2(time2);
+
+        ValueDTO character_string5 = new ValueDTO();
+        character_string5.setValue(orderInfo.getOrderNo());
+        cancelOrderMessageDTO.setCharacter_string5(character_string5);
+
+        ValueDTO thing3 = new ValueDTO();
+        thing3.setValue(MessageTypeEnum.WX_CANCEL_ORDER.getDesc());
+        cancelOrderMessageDTO.setThing3(thing3);
+        return cancelOrderMessageDTO;
+    }
+
+    /**
+     * 构建微信站内信消息
+     *
+     * @param orderInfo 订单信息
+     * @return 结果
+     */
+    private PayOrderMessageDTO builderPayOrderMessage(OrderInfo orderInfo) {
+        PayOrderMessageDTO payOrderMessageDTO = new PayOrderMessageDTO();
+        ValueDTO thing6 = new ValueDTO();
+        thing6.setValue(orderInfo.getOrderItem().getTitle());
+        payOrderMessageDTO.setThing6(thing6);
+
+        ValueDTO character_string9 = new ValueDTO();
+        character_string9.setValue(orderInfo.getOrderNo());
+        payOrderMessageDTO.setCharacter_string9(character_string9);
+
+        ValueDTO date10 = new ValueDTO();
+        long payTime = orderInfo.getPayTime() * 1000L;
+        date10.setValue(DateUtil.format(new Date(payTime), DateUtil.FULL_TIME_SPLIT_PATTERN));
+        payOrderMessageDTO.setDate10(date10);
+
+        ValueDTO thing5 = new ValueDTO();
+        thing5.setValue(MessageTypeEnum.WX_PAY_ORDER.getDesc());
+        payOrderMessageDTO.setThing5(thing5);
+
+        return payOrderMessageDTO;
+    }
+
+    /**
+     * 构建入住订单站内信消息
+     *
+     * @param orderInfo 订单信息
+     * @return 结果
+     */
+    protected ConfirmOrderMessageDTO builderConfirmOrderMessage(OrderInfo orderInfo) {
+        ConfirmOrderMessageDTO confirmOrderMessageDTO = new ConfirmOrderMessageDTO();
+        ValueDTO thing6 = new ValueDTO();
+        thing6.setValue(orderInfo.getOrderItem().getTitle());
+        confirmOrderMessageDTO.setThing1(thing6);
+
+        ValueDTO thing2 = new ValueDTO();
+        thing2.setValue(MessageTypeEnum.WX_CONFIRM_ORDER.getDesc());
+        confirmOrderMessageDTO.setThing2(thing2);
+
+        return confirmOrderMessageDTO;
     }
 
     /**

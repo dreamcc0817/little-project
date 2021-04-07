@@ -20,4 +20,30 @@ public interface OrderService {
      */
     CommonResponse<CreateOrderResponseDTO> createOrder(OrderInfoDTO orderInfoDTO);
 
+    /**
+     * 取消订单
+     *
+     * @param orderNo 订单ID
+     * @param phoneNumber 订单手机号
+     * @return
+     */
+    CommonResponse cancelOrder(String orderNo,String phoneNumber);
+
+    /**
+     * 支付订单
+     *
+     * @param orderNo     订单号
+     * @param phoneNumber 用户手机号
+     * @return 结果 订单id
+     */
+    Integer informPayOrderSuccessed(String orderNo, String phoneNumber);
+
+
+    /**
+     * 入住
+     *
+     * @param orderNo     订单号
+     * @param phoneNumber 手机号
+     */
+    void informConfirmOrder(String orderNo, String phoneNumber);
 }
